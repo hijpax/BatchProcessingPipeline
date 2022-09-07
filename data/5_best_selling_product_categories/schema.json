@@ -1,0 +1,16 @@
+{
+  "fields": [
+    {
+      "name": "category_id",
+      "type": "INT"
+    },
+    {
+      "name": "category_code",
+      "type": "VARCHAR(255)"
+    },
+    {
+      "name": "sales",
+      "type": "INT"
+    }
+  ]
+}
