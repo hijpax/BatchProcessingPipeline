@@ -183,20 +183,16 @@ def run(argv=None):
                         required=True,
                         default='data-daimlr',
                         help='GS bucket_name where the input files are present')
-
     parser.add_argument(
         '--input-path',
         dest='input_path',
         required=False,
         help='GS folder name, if the input files are inside a bucket folder')
-
-    # TODO Change the list to a file that contains the list
     parser.add_argument(
         '--input-files',
         dest='input_files',
         required=True,
         help='Comma delimited names of all input files to be imported')
-
     parser.add_argument('--bq-dataset',
                         dest='bq_dataset',
                         required=True,
@@ -214,8 +210,6 @@ def run(argv=None):
         logging.info('START - Preparing file %s' % (input_file))
 
         table_name = os.path.splitext(input_file)[0].split('_')[0]
-
-        # TODO Change to use the JSON file instead the Datastore record
         logging.info('Retrieving information for table %s' % (table_name))
 
         try:
@@ -225,7 +219,6 @@ def run(argv=None):
                              (table_name, e))
         if not table:
             raise SystemExit('No table found')
-
 
         fields = json.loads(table['columns'].decode('utf-8'),
                             object_pairs_hook=OrderedDict)
