@@ -32,7 +32,8 @@ import logging
 import os
 import re
 from collections import OrderedDict
-
+import google.auth
+from google.cloud import storage
 import apache_beam as beam
 from apache_beam.io.gcp.internal.clients.bigquery import (TableFieldSchema,
                                                           TableSchema)
@@ -42,6 +43,23 @@ from google.cloud import datastore
 
 # TODO cambiar metodo para usarlo en cualquier schema
 
+credentials, project = google.auth.default()
+#List buckets using the default account on the current gcloud cli
+client = storage.Client(credentials=credentials)
+
+#custom function to read data in json file
+def get_file_gcs(bucket_name, path_file):
+    # create storage client
+    client = storage.Client()
+
+    # get bucket with name
+    BUCKET = client.get_bucket(bucket_name)
+
+    # get the blob
+    blob = BUCKET.get_blob(path_file)
+
+    data = blob.download_as_string()
+    return data
 
 def parse_method(string_input, schema_json):
     """This method translates a single line of comma separated values to a
@@ -137,7 +155,9 @@ def run(argv=None):
     )
 
     # Get the list of files
-    input_files = open(os.path.join(base_path, known_args.input_files_list), 'r').readlines()
+    # input_files = open(os.path.join(base_path, known_args.input_files_list), 'r').readlines()
+    input_files = get_file_gcs(known_args.input_bucket,os.path.join(known_args.input_path,known_args.input_files_list)).decode()
+    input_files = input_files.split("\n")
 
     # Cada nombre de archivo en realidad es una carpeta
     for input_file in input_files:
@@ -145,25 +165,22 @@ def run(argv=None):
 
         # Get the data file path
         data_path = os.path.join(
-            base_path,
+            'gs://'+known_args.input_bucket,
+            known_args.input_path,
             input_file,
-            'data.csv'
-        )
+            'data.csv')
 
-        # Get the schema file path
-        schema_path = os.path.join(
-            base_path,
-            input_file,
-            'schema.json'
-        )
-
-        table_name = os.path.splitext(input_file)[0].split('_')[0]
+        table_name =input_file
+        print(table_name)
 
         # TODO Change to use the JSON file instead the Datastore record
         logging.info('Getting the schema from file')
 
         # Read the schema from a json file
-        schema_json = json.load(open(schema_path))
+        schema_encode = get_file_gcs(known_args.input_bucket,os.path.join(known_args.input_path,input_file,'schema.json'))
+        print(schema_encode)
+        schema_json = json.loads(schema_encode)
+        print(schema_json)
 
         logging.info('GS path being read from: %s' % data_path)
 
@@ -181,24 +198,25 @@ def run(argv=None):
          # be run in parallel on different workers using input from the
          # previous stage of the pipeline.
          | 'String To BigQuery Row' >>
-         beam.Map(lambda s: parse_method(s)) |
+         beam.Map(lambda s: parse_method(s,schema_json)) |
 
          # This stage of the pipeline translates from a CSV file single row
          # input as a string, to a dictionary object consumable by BigQuery.
          # It refers to a function we have written. This function will
          # be run in parallel on different workers using input from the
          # previous stage of the pipeline.
-         'Inject Timestamp - ' + input_file >> beam.ParDo(InjectTimestamp()) |
-         'Write to BigQuery - ' + input_file >> beam.io.Write(
-                    beam.io.BigQuerySink(
-                        # The table name passed in from the command line
-                        known_args.bq_dataset + '.' + table_name,
-                        # Schema of the table
-                        schema=schema_json,
-                        # Creates the table in BigQuery if it does not exist
-                        create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-                        # Data will be appended to the table
-                        write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND)))
+         # 'Inject Timestamp - ' + input_file >> beam.ParDo(InjectTimestamp()) |
+         'Write to BigQuery - ' + input_file >> beam.io.WriteToBigQuery(
+                    # The table name passed in from the command line
+                    known_args.bq_dataset + '.' + table_name,
+                    # Schema of the table
+                    schema=schema_json,
+                    # Creates the table in BigQuery if it does not exist
+                    create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+                    # Data will be appended to the table
+                    write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND
+                )
+         )
 
         logging.info('END - Preparing file %s' % input_file)
 
