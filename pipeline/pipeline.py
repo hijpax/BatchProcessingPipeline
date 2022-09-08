@@ -43,11 +43,12 @@ from google.cloud import datastore
 
 # TODO cambiar metodo para usarlo en cualquier schema
 
-credentials, project = google.auth.default()
-#List buckets using the default account on the current gcloud cli
-client = storage.Client(credentials=credentials)
+# credentials, project = google.auth.default()
+# List buckets using the default account on the current gcloud cli
+client = storage.Client()
 
-#custom function to read data in json file
+
+# custom function to read data in json file
 def get_file_gcs(bucket_name, path_file):
     # create storage client
     client = storage.Client()
@@ -61,39 +62,45 @@ def get_file_gcs(bucket_name, path_file):
     data = blob.download_as_string()
     return data
 
-def parse_method(string_input, schema_json):
-    """This method translates a single line of comma separated values to a
-    dictionary which can be loaded into BigQuery.
 
-    Args:
-        string_input: A comma separated list of values in the form of
-            state_abbreviation,gender,year,name,count_of_babies,dataset_created_date
-            Example string_input: KS,F,1923,Dorothy,654,11/28/2016
+class DataIngestion:
+    """A helper class which contains the logic to translate the file into
+    a format BigQuery will accept."""
 
-    Returns:
-        A dict mapping BigQuery column names as keys to the corresponding value
-        parsed from string_input. In this example, the data is not transformed, and
-        remains in the same format as the CSV.
-        example output:
-        {
-            'state': 'KS',
-            'gender': 'F',
-            'year': '1923',
-            'name': 'Dorothy',
-            'number': '654',
-            'created_date': '11/28/2016'
-        }
-     """
-    # Strip out carriage return, newline and quote characters.
-    values = re.split(",", re.sub('\r\n', '', re.sub('"', '',
-                                                     string_input)))
+    @staticmethod
+    def parse_method(string_input, schema_json):
+        """This method translates a single line of comma separated values to a
+        dictionary which can be loaded into BigQuery.
 
-    field_names = tuple(field['name'] for field in schema_json['fields'])
+        Args:
+            string_input: A comma separated list of values
+            schema_json:
 
-    row = dict(
-        zip(field_names,
-            values))
-    return row
+        Returns:
+            A dict mapping BigQuery column names as keys to the corresponding value
+            parsed from string_input. In this example, the data is not transformed, and
+            remains in the same format as the CSV.
+            example output:
+            {
+                'state': 'KS',
+                'gender': 'F',
+                'year': '1923',
+                'name': 'Dorothy',
+                'number': '654',
+                'created_date': '11/28/2016'
+            }
+         """
+
+        # Strip out carriage return, newline and quote characters.
+        values = re.split(",", re.sub('\r\n', '', re.sub('"', '',
+                                                         string_input)))
+
+        field_names = tuple(field['name'] for field in schema_json['fields'])
+
+        row = dict(
+            zip(field_names,
+                values))
+        return row
 
 
 class InjectTimestamp(beam.DoFn):
@@ -102,6 +109,7 @@ class InjectTimestamp(beam.DoFn):
         import time
         element['_RAWTIMESTAMP'] = int(time.mktime(time.gmtime()))
         return [element]
+
 
 # TODO Definir método para obtener esquema
 
@@ -148,6 +156,10 @@ def run(argv=None):
     logging.info('START - Pipeline')
     p = beam.Pipeline(argv=pipeline_args)
 
+    # DataIngestion is a class we built in this script to hold the logic for
+    # transforming the file into a BigQuery table.
+    data_ingestion = DataIngestion()
+
     # Define the origin path
     base_path = os.path.join(
         known_args.input_bucket,
@@ -156,7 +168,8 @@ def run(argv=None):
 
     # Get the list of files
     # input_files = open(os.path.join(base_path, known_args.input_files_list), 'r').readlines()
-    input_files = get_file_gcs(known_args.input_bucket,os.path.join(known_args.input_path,known_args.input_files_list)).decode()
+    input_files = get_file_gcs(known_args.input_bucket,
+                               os.path.join(known_args.input_path, known_args.input_files_list)).decode()
     input_files = input_files.split("\n")
 
     # Cada nombre de archivo en realidad es una carpeta
@@ -165,19 +178,20 @@ def run(argv=None):
 
         # Get the data file path
         data_path = os.path.join(
-            'gs://'+known_args.input_bucket,
+            'gs://' + known_args.input_bucket,
             known_args.input_path,
             input_file,
             'data.csv')
 
-        table_name =input_file
+        table_name = input_file
         print(table_name)
 
         # TODO Change to use the JSON file instead the Datastore record
         logging.info('Getting the schema from file')
 
         # Read the schema from a json file
-        schema_encode = get_file_gcs(known_args.input_bucket,os.path.join(known_args.input_path,input_file,'schema.json'))
+        schema_encode = get_file_gcs(known_args.input_bucket,
+                                     os.path.join(known_args.input_path, input_file, 'schema.json'))
         print(schema_encode)
         schema_json = json.loads(schema_encode)
         print(schema_json)
@@ -197,7 +211,7 @@ def run(argv=None):
          # be run in parallel on different workers using input from the
          # previous stage of the pipeline.
          | 'String To BigQuery Row' + input_file >>
-         beam.Map(lambda s: parse_method(s, schema_json)) |
+         beam.Map(lambda s: data_ingestion.parse_method(string_input=s,schema_json=schema_json)) |
 
          # This stage of the pipeline translates from a CSV file single row
          # input as a string, to a dictionary object consumable by BigQuery.

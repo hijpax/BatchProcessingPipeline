@@ -2,7 +2,7 @@
   "fields": [
     {
       "name": "day",
-      "type": "STRING(50)"
+      "type": "STRING"
     },
     {
       "name": "purchase_count",

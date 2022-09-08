@@ -6,7 +6,7 @@
     },
     {
       "name": "category_code",
-      "type": "VARCHAR(255)"
+      "type": "STRING"
     },
     {
       "name": "sales",

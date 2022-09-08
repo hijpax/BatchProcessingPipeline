@@ -28,7 +28,8 @@ class DataIngestion:
     """A helper class which contains the logic to translate the file into
     a format BigQuery will accept."""
 
-    def parse_method(self, string_input):
+    @staticmethod
+    def parse_method(string_input):
         """This method translates a single line of comma separated values to a
         dictionary which can be loaded into BigQuery.
 
