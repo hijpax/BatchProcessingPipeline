@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"category_id",
-      "type":"INT"
+      "type":"INT64"
     },
     {
       "name":"category_code",
@@ -10,7 +10,7 @@
     },
     {
       "name":"sales",
-      "type":"INT"
+      "type":"INT64"
     }
   ]
 }
