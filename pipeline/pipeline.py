@@ -189,16 +189,15 @@ def run(argv=None):
          # processing starts with lines read from the file. We use the input
          # argument from the command line. We also skip the first line which is a
          # header row.
-         | 'Read from a File' >> beam.io.ReadFromText(data_path,
-                                                      skip_header_lines=1)
+         | 'Read from a File' + input_file >> beam.io.ReadFromText(data_path, skip_header_lines=1)
 
          # This stage of the pipeline translates from a CSV file single row
          # input as a string, to a dictionary object consumable by BigQuery.
          # It refers to a function we have written. This function will
          # be run in parallel on different workers using input from the
          # previous stage of the pipeline.
-         | 'String To BigQuery Row' >>
-         beam.Map(lambda s: parse_method(s,schema_json)) |
+         | 'String To BigQuery Row' + input_file >>
+         beam.Map(lambda s: parse_method(s, schema_json)) |
 
          # This stage of the pipeline translates from a CSV file single row
          # input as a string, to a dictionary object consumable by BigQuery.
