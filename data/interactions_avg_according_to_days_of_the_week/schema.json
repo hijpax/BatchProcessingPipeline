@@ -1,36 +1,36 @@
 {
   "fields": [
     {
-      "name": "day",
-      "type": "STRING"
+      "name":"day",
+      "type":"STRING"
     },
     {
-      "name": "purchase_count",
-      "type": "INT"
+      "name":"purchase_count",
+      "type":"INT"
     },
     {
-      "name": "purchase_avg",
-      "type": "DECIMAL"
+      "name":"purchase_avg",
+      "type":"DECIMAL"
     },
     {
-      "name": "cart_count",
-      "type": "INT"
+      "name":"cart_count",
+      "type":"INT"
     },
     {
-      "name": "cart_avg",
-      "type": "DECIMAL"
+      "name":"cart_avg",
+      "type":"DECIMAL"
     },
     {
-      "name": "view_count",
-      "type": "INT"
+      "name":"view_count",
+      "type":"INT"
     },
     {
-      "name": "view_avg",
-      "type": "DECIMAL"
+      "name":"view_avg",
+      "type":"DECIMAL"
     },
     {
-      "name": "total_interactions",
-      "type": "INT"
+      "name":"total_interactions",
+      "type":"INT"
     }
   ]
 }

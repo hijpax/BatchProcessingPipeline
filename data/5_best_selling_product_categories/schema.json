@@ -1,16 +1,16 @@
 {
   "fields": [
     {
-      "name": "category_id",
-      "type": "INT"
+      "name":"category_id",
+      "type":"INT"
     },
     {
-      "name": "category_code",
-      "type": "STRING"
+      "name":"category_code",
+      "type":"STRING"
     },
     {
-      "name": "sales",
-      "type": "INT"
+      "name":"sales",
+      "type":"INT"
     }
   ]
 }
