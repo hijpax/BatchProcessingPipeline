@@ -1,0 +1,36 @@
+{
+  "fields":[
+    {
+      "name":"category_id",
+      "type":"INT64"
+    },
+    {
+      "name":"category_code",
+      "type":"STRING"
+    },
+    {
+      "name":"count_purchase_category",
+      "type":"INT64"
+    },
+    {
+      "name":"sales_category",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"best_selling_product_id",
+      "type":"INT64"
+    },
+    {
+      "name":"count_purchase_product",
+      "type":"INT64"
+    },
+    {
+      "name":"sales_product",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"category_sales_per",
+      "type":"DECIMAL"
+    }
+  ]
+}

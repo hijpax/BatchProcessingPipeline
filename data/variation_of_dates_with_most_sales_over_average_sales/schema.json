@@ -1,0 +1,20 @@
+{
+  "fields": [
+    {
+      "name":"date",
+      "type":"DATE"
+    },
+    {
+      "name":"sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"deviation",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"deviation_per",
+      "type":"DECIMAL"
+    }
+  ]
+}

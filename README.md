@@ -52,3 +52,17 @@ python pipeline.py \
 ```
 
 7 - Enable access with the steps https://stackoverflow.com/questions/56302658/anonymous-caller-does-not-have-storage-objects-get
+
+## Resources
+* [Override the organization policy for a project](https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints#v2-api_6)
+* [Google BigQuery - Tableau](https://help.tableau.com/current/pro/desktop/en-us/examples_googlebigquery.htm)
+* [Requiring permission to attach service accounts to resources - Dataflow](https://cloud.google.com/iam/docs/service-accounts-actas#dataproc-dataflow-datafusion)
+* [Bigquery - Data Types](https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#data_type_properties)
+* [Cloud Storage client libraries setup](https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-python)
+* [Read files in Google Cloud Storage Bucket Using Python](https://github.com/vigneshSs-07/Cloud-AI-Analytics/tree/main/Cloud%20Storage#hands-on-on-read-files-in-google-cloud-storage-bucket-using-python)
+* [How to Read Different Types Of files from Google Cloud Storage Bucket Using Python](https://www.youtube.com/watch?v=bHudgNDyltI&t=117s)
+* [Google APIs tips](https://stackoverflow.com/questions/56302658/anonymous-caller-does-not-have-storage-objects-get)
+* [Writing an ETL pipeline using Apache Beam and Cloud Dataflow (Python) - Lab](https://www.cloudskillsboost.google/course_sessions/1524821/labs/103668)
+* [Basic ETL pipeline](https://github.com/GoogleCloudPlatform/training-data-analyst/blob/master/quests/dataflow_python/1_Basic_ETL/solution/my_pipeline.py)
+* [Dataflow python - batch examples](https://github.com/GoogleCloudPlatform/professional-services/tree/main/examples/dataflow-python-examples/batch-examples/cookbook-examples)
+* [Cloud Storage to Big Query Batch Job - Tutorial](https://www.youtube.com/watch?v=km9ZR6gVYe0)

@@ -1,0 +1,36 @@
+{
+  "fields": [
+    {
+      "name":"hour",
+      "type":"INT64"
+    },
+    {
+      "name":"total_views",
+      "type":"INT64"
+    },
+    {
+      "name":"view_per",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"total_cart",
+      "type":"INT64"
+    },
+    {
+      "name":"cart_per",
+      "type":"DECIMAL"
+    },
+    {
+      "name": "total_purchase",
+      "type": "INT64"
+    },
+    {
+      "name":"purchase_per",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"total_interactions",
+      "type":"INT64"
+    }
+  ]
+}

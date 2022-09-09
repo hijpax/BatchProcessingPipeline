@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "name":"product_id",
+      "type":"INT64"
+    },
+    {
+      "name":"brand",
+      "type":"STRING"
+    },
+    {
+      "name":"total_sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"avg",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"range",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"stddev",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"coefficient_var",
+      "type":"DECIMAL"
+    }
+  ]
+}

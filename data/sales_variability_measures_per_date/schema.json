@@ -1,0 +1,28 @@
+{
+  "fields": [
+    {
+      "name":"min_sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"max_sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"range_sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"avg_sales",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"stddev",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"coefficient_var",
+      "type":"DECIMAL"
+    }
+  ]
+}

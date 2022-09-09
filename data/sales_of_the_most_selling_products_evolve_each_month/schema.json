@@ -1,0 +1,40 @@
+{
+  "fields": [
+    {
+      "name":"product_id",
+      "type":"INT64"
+    },
+    {
+      "name":"brand",
+      "type":"STRING"
+    },
+    {
+      "name":"Oct_total",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"Oct_percentage",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"Nov_total",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"Nov_percentage",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"Dec_total",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"Dec_percentage",
+      "type":"DECIMAL"
+    },
+    {
+      "name":"total_sales_product",
+      "type":"DECIMAL"
+    }
+  ]
+}
