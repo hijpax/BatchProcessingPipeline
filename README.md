@@ -25,11 +25,17 @@ To run the client library, you must first set up authentication. One way to do t
 3- Create bucket\
 4- Copy data to the bucket\
 5- Create the BQ dataset\
-bq mk ecommerce_behavor\
+```shell
+bq mk ecommerce_behavor
+```
 4- Build the Docker image\
-docker build -t beam_python .\
+```shell
+docker build -t beam_python .
+```
 5- Run a docker container with the new image\
-docker run -it -e PROJECT=$PROJECT -v /home/jirene_delgadoh/keys.json:/keys.json -v $(pwd)/pipeline:/pipeline beam_python \
+```shell
+docker run -it -e PROJECT=$PROJECT -v /home/jirene_delgadoh/keys.json:/keys.json -v $(pwd)/pipeline:/pipeline beam_python
+```
 6 - Set the variables\
 ```shell
 export GOOGLE_APPLICATION_CREDENTIALS=/keys.json \

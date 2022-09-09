@@ -2,11 +2,11 @@
   "fields": [
     {
       "name":"hour",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"total_views",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"view_per",
@@ -14,7 +14,7 @@
     },
     {
       "name":"total_cart",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"cart_per",
@@ -22,7 +22,7 @@
     },
     {
       "name": "total_purchase",
-      "type": "INT64"
+      "type": "INT"
     },
     {
       "name":"purchase_per",
@@ -30,7 +30,7 @@
     },
     {
       "name":"total_interactions",
-      "type":"INT64"
+      "type":"INT"
     }
   ]
 }

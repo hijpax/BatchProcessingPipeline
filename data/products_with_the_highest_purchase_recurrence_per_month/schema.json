@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"No",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"month",
@@ -10,7 +10,7 @@
     },
     {
       "name":"product_id",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"brand",
@@ -18,19 +18,19 @@
     },
     {
       "name":"2-15 times",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"16-3 times",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":">30 times",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"total_recurrence",
-      "type":"INT64"
+      "type":"INT"
     }
   ]
 }

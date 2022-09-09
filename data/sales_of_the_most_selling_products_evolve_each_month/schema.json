@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"product_id",
-      "type":"INT64"
+      "type":"INT"
     },
     {
       "name":"brand",

@@ -227,7 +227,7 @@ def run(argv=None):
                     # Creates the table in BigQuery if it does not exist
                     create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
                     # Data will be appended to the table
-                    write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND
+                    write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
                 )
          )
 
