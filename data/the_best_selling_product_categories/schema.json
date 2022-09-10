@@ -2,7 +2,7 @@
   "fields":[
     {
       "name":"category_id",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"category_code",
@@ -10,7 +10,7 @@
     },
     {
       "name":"count_purchase_category",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"sales_category",
@@ -18,11 +18,11 @@
     },
     {
       "name":"best_selling_product_id",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"count_purchase_product",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"sales_product",
@@ -30,7 +30,7 @@
     },
     {
       "name":"category_sales_per",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     }
   ]
 }

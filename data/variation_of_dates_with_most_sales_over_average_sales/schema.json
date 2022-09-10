@@ -10,11 +10,11 @@
     },
     {
       "name":"deviation",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"deviation_per",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     }
   ]
 }

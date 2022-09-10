@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"product_id",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"brand",
@@ -10,23 +10,25 @@
     },
     {
       "name":"total_sales",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"avg",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"range",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"stddev",
-      "type":"DECIMAL"
+      "type":"FLOAT",
+      "mode":"NULLABLE"
     },
     {
       "name":"coefficient_var",
-      "type":"DECIMAL"
+      "type":"FLOAT",
+      "mode":"NULLABLE"
     }
   ]
 }

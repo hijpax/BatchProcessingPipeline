@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"No",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"month",
@@ -10,27 +10,27 @@
     },
     {
       "name":"product_id",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"brand",
       "type":"STRING"
     },
     {
-      "name":"2-15 times",
-      "type":"INT"
+      "name":"between_2_to_15_times",
+      "type":"INTEGER"
     },
     {
-      "name":"16-3 times",
-      "type":"INT"
+      "name":"between_16_to_3_times",
+      "type":"INTEGER"
     },
     {
-      "name":">30 times",
-      "type":"INT"
+      "name":"more_than_30_times",
+      "type":"INTEGER"
     },
     {
       "name":"total_recurrence",
-      "type":"INT"
+      "type":"INTEGER"
     }
   ]
 }

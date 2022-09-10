@@ -2,35 +2,35 @@
   "fields": [
     {
       "name":"hour",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"total_views",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"view_per",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"total_cart",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"cart_per",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name": "total_purchase",
-      "type": "INT"
+      "type": "INTEGER"
     },
     {
       "name":"purchase_per",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"total_interactions",
-      "type":"INT"
+      "type":"INTEGER"
     }
   ]
 }

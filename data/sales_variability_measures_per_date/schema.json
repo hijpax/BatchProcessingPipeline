@@ -18,11 +18,11 @@
     },
     {
       "name":"stddev",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"coefficient_var",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     }
   ]
 }

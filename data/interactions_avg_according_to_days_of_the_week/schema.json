@@ -6,7 +6,7 @@
     },
     {
       "name":"purchase_count",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"purchase_avg",
@@ -14,7 +14,7 @@
     },
     {
       "name":"cart_count",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"cart_avg",
@@ -22,15 +22,15 @@
     },
     {
       "name":"view_count",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"view_avg",
       "type":"DECIMAL"
     },
     {
-      "name":"total_interactions",
-      "type":"INT"
+      "name":"total_INTEGEReractions",
+      "type":"INTEGER"
     }
   ]
 }

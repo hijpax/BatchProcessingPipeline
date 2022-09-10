@@ -2,7 +2,7 @@
   "fields": [
     {
       "name":"product_id",
-      "type":"INT"
+      "type":"INTEGER"
     },
     {
       "name":"brand",
@@ -14,7 +14,7 @@
     },
     {
       "name":"Oct_percentage",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"Nov_total",
@@ -22,7 +22,7 @@
     },
     {
       "name":"Nov_percentage",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"Dec_total",
@@ -30,7 +30,7 @@
     },
     {
       "name":"Dec_percentage",
-      "type":"DECIMAL"
+      "type":"FLOAT"
     },
     {
       "name":"total_sales_product",
