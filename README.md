@@ -103,7 +103,13 @@ python generate_jobs.py \
 --bq-dataset=$BQ_DATASET 
 ```
 
-## Results in Tableau
+## Results
+### Dataflow
+The script [generate_jobs.py](./pipeline/generate_jobs.py) generate one Dataflow job for each report name described in [report_names.txt](./data/report_names.txt).By accessing the list of Dataflow Jobs through the GCP console, you can see the results of the execution.
+
+![Jobs list](./images/dataflow_results.png)
+
+### Tableau
 To connect the BigQuery Dataset I followed the steps described in [Google BigQuery section](https://help.tableau.com/current/pro/desktop/en-us/examples_googlebigquery.htm) in Tablea documentation.
 Its possible create worksheets, charts, or complete dashboard like this:
 
