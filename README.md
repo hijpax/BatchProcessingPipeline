@@ -6,12 +6,12 @@ To do this, the structure presented in [the GCP examples](https://github.com/Goo
 ![Ingest data from a file into BigQuery](https://raw.githubusercontent.com/GoogleCloudPlatform/professional-services/main/examples/dataflow-python-examples/batch-examples/cookbook-examples/img/csv_file_to_bigquery.png)
 
 ## Project Structure
-|      FOLDER/FILE      | PURPOSE                                                                                                                                                                                                                                 |
-|:---------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|         data/         | It includes all the sub-folders corresponding to the reports that will be loaded into BigQuery. Each folder contains a ``data.csv`` file with the data and its ``schema.json`` with the schema structure.                               |
-| data/report_names.txt | This text file lists the names of the subfolders that will be read by the script to generate an extract-transform-load job for each one, from the files ``data.csv`` and ``schema.json `` corresponding.                                |
-|       pipeline/       | Contains the python script ``generate_jobs.py`` that will generate the jobs in Dataflow to read the data from Cloud Storage and load it into BigQuery. It also contains the ``requirements.txt`` file with the python libraries to use. |
-|      Dockerfile       | From this file, the docker image is generated with the necessary environment to execute the script. It builds from an image with Python 3.7 and Beam 2.24.0 and installs ``requirements.txt`` from the ``pipeline`` folder.             |
+|      FOLDER/FILE      | PURPOSE                                                                                                                                                                                                                                                            |
+|:---------------------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|         data/         | It includes all the sub-folders corresponding to the reports that will be loaded into BigQuery. Each folder contains a ``data.csv`` file with the data and its ``schema.json`` with the schema structure.                                                          |
+| data/report_names.txt | This text file lists the names of the subfolders that will be read by the script to generate an extract-transform-load job for each one, from the files ``data.csv`` and ``schema.json `` corresponding.                                                           |
+|       pipeline/       | Contains the python script [generate_jobs.py](./pipeline/generate_jobs.py) that will generate the jobs in Dataflow to read the data from Cloud Storage and load it into BigQuery. It also contains the ``requirements.txt`` file with the python libraries to use. |
+|      Dockerfile       | From this file, the docker image is generated with the necessary environment to execute the script. It builds from an image with Python 3.7 and Beam 2.24.0 and installs ``requirements.txt`` from the ``pipeline`` folder.                                        |
 
 
 The following sections cover setting up authentication and environment, and how to run the pipeline. Then the results in Tableau.
@@ -103,6 +103,11 @@ python generate_jobs.py \
 --bq-dataset=$BQ_DATASET 
 ```
 
+## Results in Tableau
+To connect the BigQuery Dataset I followed the steps described in [Google BigQuery section](https://help.tableau.com/current/pro/desktop/en-us/examples_googlebigquery.htm) in Tablea documentation.
+Its possible create worksheets, charts, or complete dashboard like this:
+
+![Tableau Dashboard](./images/tableau_dashboard.png)
 
 ## Resources consulted
 * [Override the organization policy for a project](https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints#v2-api_6)
