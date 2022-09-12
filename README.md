@@ -1,52 +1,98 @@
 # Batch Processing Pipeline with Dataflow
-A pipeline to read text files from Cloud Storage to BigQuery with Dataflow.
+A pipeline to read text files from Cloud Storage and load them into a BigQuery dataset with Dataflow. The objective is to consume the BigQuery Dataset in Tableau to present a dashboard of the reports obtained from the [analysis of an eCommerce behavior dataset](https://github.com/hijpax/SparkPractice).
 
-## Setting up authentication
-To run the client library, you must first set up authentication. One way to do that is to create a service account and set an environment variable, as shown in the following steps.
+To do this, the structure presented in [the GCP examples](https://github.com/GoogleCloudPlatform/professional-services/tree/main/examples/dataflow-python-examples/batch-examples/cookbook-examples) was followed.
 
-1. Create the service account:
-   ```shell
-    gcloud iam service-accounts create pipeline
-    ```
-2. Grant roles to the service account. Run the following command:
-    ```shell
-   gcloud projects add-iam-policy-binding empyrean-surge-360315 --member="serviceAccount:pipeline@empyrean-surge-360315.iam.gserviceaccount.com" --role=roles/storage.admin
-   ```
-3. Generate the key file:
-    ```shell
-    gcloud iam service-accounts keys create /home/jirene_delgadoh/keys.json --iam-account=pipeline@empyrean-surge-360315.iam.gserviceaccount.com
-    ```
-4. Provide authentication credentials to your application code by setting the environment variable GOOGLE_APPLICATION_CREDENTIALS.
-    ```shell
-    export GOOGLE_APPLICATION_CREDENTIALS="/home/jirene_delgadoh/keys.json"
-    ```
-1- Set environment on Shell\
-2- Clone repo\
-3- Create bucket\
-4- Copy data to the bucket\
-5- Create the BQ dataset\
+![Ingest data from a file into BigQuery](https://raw.githubusercontent.com/GoogleCloudPlatform/professional-services/main/examples/dataflow-python-examples/batch-examples/cookbook-examples/img/csv_file_to_bigquery.png)
+
+## Project Structure
+|      FOLDER/FILE      | PURPOSE                                                                                                                                                                                                                                 |
+|:---------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|         data/         | It includes all the sub-folders corresponding to the reports that will be loaded into BigQuery. Each folder contains a ``data.csv`` file with the data and its ``schema.json`` with the schema structure.                               |
+| data/report_names.txt | This text file lists the names of the subfolders that will be read by the script to generate an extract-transform-load job for each one, from the files ``data.csv`` and ``schema.json `` corresponding.                                |
+|       pipeline/       | Contains the python script ``generate_jobs.py`` that will generate the jobs in Dataflow to read the data from Cloud Storage and load it into BigQuery. It also contains the ``requirements.txt`` file with the python libraries to use. |
+|      Dockerfile       | From this file, the docker image is generated with the necessary environment to execute the script. It builds from an image with Python 3.7 and Beam 2.24.0 and installs ``requirements.txt`` from the ``pipeline`` folder.             |
+
+
+The following sections cover setting up authentication and environment, and how to run the pipeline. Then the results in Tableau.
+
+## Enabling APIs
+1. Set the default project to the one in which you want to enable the API
 ```shell
-bq mk ecommerce_behavor
+gcloud config set project <PROJECT_ID>
 ```
-4- Build the Docker image\
+2. Enabled CLoud Storage and Dataflow APIs.
+```shell
+gcloud services enable storage-component.googleapis.com dataflow.googleapis.com
+```
+## Setting up authentication
+It's required get the permissions to use the Cloud Storage Client Library, Dataflow API, and perform actions on the BigQuery dataset. One way to do this is to create a service account with the correct roles and set an environment variable, as shown in the following steps.
+
+1. Create the service account (in this case with the name "pipeline"):
+```shell
+gcloud iam service-accounts create pipeline
+ ```
+2. Grant roles to the service account. The role IDs:
+  - roles/bigquery.dataEditor
+  - roles/storage.admin
+  - roles/dataflow.admin
+  - roles/dataflow.worker
+  - roles/iam.serviceAccountUser
+
+  Run the following command one time for each role: 
+
+```shell
+gcloud projects add-iam-policy-binding <PROJECT_ID> --member="serviceAccount:pipeline@<project-id>.iam.gserviceaccount.com" --role=<ROLE_ID>
+   ```
+   
+4. Generate the key file:
+
+```shell
+gcloud iam service-accounts keys create /<HOME_PATH>/keys.json --iam-account=pipeline@<PROJECT_ID>.iam.gserviceaccount.com
+```
+   
+## Setting up environment
+Now, it is time to get the pipeline file, add the data file to Cloud Storage, and set the environment variables.
+
+1. Open the Cloud Shell and clone this repository
+```shell
+git clone https://github.com/hijpax/BatchProcessingPipeline.git
+cd BatchProcessingPipeline/
+```
+3- Create a Cloud Storage Bucket
+```shell
+gsutil mb gs://<BUCKET_NAME>
+```
+4- Copy data folder to the bucket
+```shell
+gsutil cp -r data/ gs://<BUCKET_NAME>/
+```
+5- Create the BQ dataset
+```shell
+bq mk <DATASET_NAME>
+```
+4- Build the Docker image
 ```shell
 docker build -t beam_python .
 ```
-5- Run a docker container with the new image\
+
+## Run the pipeline code
+1. Run a docker container with the new image
 ```shell
-docker run -it -e PROJECT=$PROJECT -v /home/jirene_delgadoh/keys.json:/keys.json -v $(pwd)/pipeline:/pipeline beam_python
+docker run -it -e -v /<HOME_PATH>/keys.json:/keys.json -v $(pwd)/pipeline:/pipeline beam_python
 ```
-6 - Set the variables\
+2.  Set the environment variables, and replace with the Project's ID, Bucket name, and BigQuery Dataset name used in the previous steps.
 ```shell
 export GOOGLE_APPLICATION_CREDENTIALS=/keys.json \
-export PROJECT=empyrean-surge-360315 \
-export INPUT_BUCKET=ecomerce-behavor-bucket \
+export PROJECT=<PROJECT_ID> \
+export INPUT_BUCKET=<BUCKET_NAME> \
 export INPUT_PATH=data \
 export FILES_LIST=report_names.txt \
-export BQ_DATASET=ecommerce_behavor
+export BQ_DATASET=<BIGQUERY_DATASET>
 ```
+3. Run the solution
 ```shell
-python pipeline.py \
+python generate_jobs.py \
 --project=$PROJECT --region= \
 --runner=DataflowRunner \
 --staging_location=gs://$INPUT_BUCKET/test \
@@ -57,9 +103,8 @@ python pipeline.py \
 --bq-dataset=$BQ_DATASET 
 ```
 
-7 - Enable access with the steps https://stackoverflow.com/questions/56302658/anonymous-caller-does-not-have-storage-objects-get
 
-## Resources
+## Resources consulted
 * [Override the organization policy for a project](https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints#v2-api_6)
 * [Google BigQuery - Tableau](https://help.tableau.com/current/pro/desktop/en-us/examples_googlebigquery.htm)
 * [Requiring permission to attach service accounts to resources - Dataflow](https://cloud.google.com/iam/docs/service-accounts-actas#dataproc-dataflow-datafusion)
@@ -72,3 +117,4 @@ python pipeline.py \
 * [Basic ETL pipeline](https://github.com/GoogleCloudPlatform/training-data-analyst/blob/master/quests/dataflow_python/1_Basic_ETL/solution/my_pipeline.py)
 * [Dataflow python - batch examples](https://github.com/GoogleCloudPlatform/professional-services/tree/main/examples/dataflow-python-examples/batch-examples/cookbook-examples)
 * [Cloud Storage to Big Query Batch Job - Tutorial](https://www.youtube.com/watch?v=km9ZR6gVYe0)
+* [Enable the Required GCP APIs](https://docs.lacework.com/onboarding/gcp-enable-the-required-apis)

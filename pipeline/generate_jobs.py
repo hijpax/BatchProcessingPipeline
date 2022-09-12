@@ -31,33 +31,20 @@ import json
 import logging
 import os
 import re
-from collections import OrderedDict
-import google.auth
 from google.cloud import storage
 import apache_beam as beam
-from apache_beam.io.gcp.internal.clients.bigquery import (TableFieldSchema,
-                                                          TableSchema)
-from google.api_core.exceptions import InvalidArgument
-from google.auth.exceptions import GoogleAuthError
-from google.cloud import datastore
-
-# TODO cambiar metodo para usarlo en cualquier schema
-
-# credentials, project = google.auth.default()
-# List buckets using the default account on the current gcloud cli
-client = storage.Client()
 
 
-# custom function to read data in json file
+# custom function to read data files from Cloud Storage
 def get_file_gcs(bucket_name, path_file):
     # create storage client
     client = storage.Client()
 
     # get bucket with name
-    BUCKET = client.get_bucket(bucket_name)
+    bucket = client.get_bucket(bucket_name)
 
     # get the blob
-    blob = BUCKET.get_blob(path_file)
+    blob = bucket.get_blob(path_file)
 
     data = blob.download_as_string()
     return data
@@ -74,44 +61,23 @@ class DataIngestion:
 
         Args:
             string_input: A comma separated list of values
-            schema_json:
+            schema_json: The schema of the data in json format
 
         Returns:
             A dict mapping BigQuery column names as keys to the corresponding value
-            parsed from string_input. In this example, the data is not transformed, and
-            remains in the same format as the CSV.
-            example output:
-            {
-                'state': 'KS',
-                'gender': 'F',
-                'year': '1923',
-                'name': 'Dorothy',
-                'number': '654',
-                'created_date': '11/28/2016'
-            }
+            parsed from string_input.
          """
 
         # Strip out carriage return, newline and quote characters.
         values = re.split(",", re.sub('\r\n', '', re.sub('"', '',
                                                          string_input)))
-
+        # Get the fields name from schema json
         field_names = tuple(field['name'] for field in schema_json['fields'])
 
         row = dict(
             zip(field_names,
                 values))
         return row
-
-
-class InjectTimestamp(beam.DoFn):
-
-    def process(self, element):
-        import time
-        element['_RAWTIMESTAMP'] = int(time.mktime(time.gmtime()))
-        return [element]
-
-
-# TODO Definir método para obtener esquema
 
 
 def run(argv=None):
@@ -137,12 +103,6 @@ def run(argv=None):
         required=True,
         help='File name of the files list')
 
-    # parser.add_argument(
-    #     '--input-files',
-    #     dest='input_files',
-    #     required=True,
-    #     help='Comma delimited names of all input files to be imported')
-
     parser.add_argument('--bq-dataset',
                         dest='bq_dataset',
                         required=True,
@@ -159,19 +119,12 @@ def run(argv=None):
     # transforming the file into a BigQuery table.
     data_ingestion = DataIngestion()
 
-    # Define the origin path
-    base_path = os.path.join(
-        known_args.input_bucket,
-        known_args.input_path if known_args.input_path else ""
-    )
-
-    # Get the list of files
-    # input_files = open(os.path.join(base_path, known_args.input_files_list), 'r').readlines()
+    # Get the list of folders (reports) with the data and schema files
     input_files = get_file_gcs(known_args.input_bucket,
                                os.path.join(known_args.input_path, known_args.input_files_list)).decode()
     input_files = input_files.split("\n")
 
-    # Cada nombre de archivo en realidad es una carpeta
+    # for each report generate a job
     for input_file in input_files:
         p = beam.Pipeline(argv=pipeline_args)
 
@@ -187,7 +140,6 @@ def run(argv=None):
         table_name = input_file
         print(table_name)
 
-        # TODO Change to use the JSON file instead the Datastore record
         logging.info('Getting the schema from file')
 
         # Read the schema from a json file
@@ -195,7 +147,6 @@ def run(argv=None):
                                      os.path.join(known_args.input_path, input_file, 'schema.json'))
 
         schema_json = json.loads(schema_encode)
-
 
         logging.info('GS path being read from: %s' % data_path)
 
